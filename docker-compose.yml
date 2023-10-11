@@ -3,8 +3,16 @@ version: '3.8'
 services:
   some-rabbit:
     image: rabbitmq:3.12-management-alpine
-    labels:
-      - quarkus-dev-service-amqp=amqp
+    profiles: ["rabbit"]
+    # labels: 
+      # io.quarkus.devservices.compose.wait_for.logs: .*Server startup complete.*
+      # io.quarkus.devservices.compose.wait_for.ports.disable: true
+      # io.quarkus.devservices.compose.wait_for.ports.timeout: 1s
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 1s
+      timeout: 3s
+      retries: 30
     ports:
       - '5671'
       - '15671'
@@ -13,4 +21,3 @@ services:
     volumes:
       - './enabled_plugins:/etc/rabbitmq/enabled_plugins:ro'
       - './custom_rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf'
-  

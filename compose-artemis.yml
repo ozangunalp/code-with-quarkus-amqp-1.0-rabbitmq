@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  my-amqp:
+    image: quay.io/artemiscloud/activemq-artemis-broker:1.0.22
+    profiles: ["artemis", "myprofile"]
+    environment:
+      - AMQ_EXTRA_ARGS=--no-autotune --mapped --no-fsync ${MY_PROP}
+      - AMQ_USER=admin
+      - AMQ_PASSWORD=admin
+    labels:
+      # io.quarkus.devservices.compose.ignore: true
+      io.quarkus.devservices.compose.wait_for.logs: .*AMQ241004.*
+      # io.quarkus.devservices.compose.wait_for.ports.disable: true
+    ports:
+      - '5672'
+      - '8161'
